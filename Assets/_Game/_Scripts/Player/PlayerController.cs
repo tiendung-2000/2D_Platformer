@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -23,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool isMoving;
     [SerializeField] bool isAttack;
     [SerializeField] bool isJumping;
+    [SerializeField] bool isFalling;
 
     [Header("Dashing")]
     [SerializeField] bool canDash = true;
@@ -30,19 +30,27 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashingPower;
     [SerializeField] float dashingTime;
     [SerializeField] float dashingCooldown;
+    //[SerializeField] ParticleSystem dashFX;
 
     //Animation State
     const string PLAYER_IDLE = "PlayerIdle";
     const string PLAYER_WALK = "PlayerWalk";
     const string PLAYER_JUMP = "PlayerJump";
-    //const string PLAYER_FALL = "PlayerFalling";
-    const string PLAYER_DASH = "PlayerDashing";
+    const string PLAYER_FALL = "PlayerFalling";
+    //const string PLAYER_DASH = "PlayerDashing";
     const string PLAYER_JUMP_ATTACK = "PlayerJumpAttack";
     const string PLAYER_MELEE_ATTACK = "PlayerMeleeAttack";
 
+    public SpriteRenderer spriteRenderer;
+    GhostController ghostController;
+
     void Start()
     {
-        animator = GetComponentInChildren<Animator>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        ghostController = GetComponent<GhostController>();
+
+        ghostController.enabled = false;
     }
 
     private void Update()
@@ -51,6 +59,8 @@ public class PlayerController : MonoBehaviour
         Jumping();
         Flip();
         Dashing();
+
+        HandleAnimation();
     }
 
     void FixedUpdate()
@@ -67,17 +77,6 @@ public class PlayerController : MonoBehaviour
     {
         //Moving
         horizontal = Input.GetAxisRaw("Horizontal");
-
-        if (horizontal == 0 && IsGrounded())
-        {
-            isMoving = false;
-            ChangeAnimationState(PLAYER_IDLE);
-        }
-        else if (horizontal != 0 && IsGrounded())
-        {
-            isMoving = true;
-            ChangeAnimationState(PLAYER_WALK);
-        }
     }
 
     void Jumping()
@@ -93,10 +92,41 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
+    }
 
+    void HandleAnimation()
+    {
+        //Fall Anim
+        if (Mathf.Abs(rb.velocity.y) > 0.5f && rb.velocity.y < -1f && !IsGrounded())
+        {
+            if (isFalling == false)
+            {
+                ChangeAnimationState(PLAYER_FALL);
+                isJumping = false;
+                isFalling = true;
+            }
+        }
+        else
+        {
+            isFalling = false;
+        }
+
+        //Jump Anim
         if (!IsGrounded() && isJumping == true)
         {
             ChangeAnimationState(PLAYER_JUMP);
+        }
+
+        //Move Anim
+        if (horizontal == 0 && IsGrounded())
+        {
+            isMoving = false;
+            ChangeAnimationState(PLAYER_IDLE);
+        }
+        else if (horizontal != 0 && IsGrounded())
+        {
+            isMoving = true;
+            ChangeAnimationState(PLAYER_WALK);
         }
     }
 
@@ -107,7 +137,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if(Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
             StartCoroutine(Dash());
         }
@@ -120,11 +150,10 @@ public class PlayerController : MonoBehaviour
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
-
-        //trai
-        //tr.emitting = true;
+        ghostController.enabled = true;
         yield return new WaitForSeconds(dashingTime);
-        //tr.emitting = false;
+        ghostController.enabled = false;
+
         rb.gravityScale = originalGravity;
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
