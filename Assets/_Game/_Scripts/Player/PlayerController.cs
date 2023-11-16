@@ -64,11 +64,18 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        Attack();
+
+        if (isAttack)
+        {
+            horizontal = 0;
+            return;
+        }
+
         Moving();
         Jumping();
         Flip();
         Dashing();
-        Attack();
         HandleAnimation();
     }
 
@@ -82,6 +89,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
     }
 
+    #region Attack Combo
     void Attack()
     {
         if (isAttack)
@@ -103,24 +111,6 @@ public class PlayerController : MonoBehaviour
                 ChangeAnimationState(PLAYER_ATTACK_1);
                 doneAnim = true;
             }
-            else if (attackCount == 2)
-            {
-                ChangeAnimationState(PLAYER_ATTACK_2);
-                doneAnim = true;
-            }
-            else if (attackCount == 3)
-            {
-                ChangeAnimationState(PLAYER_ATTACK_3);
-                doneAnim = true;
-            }
-        }
-    }
-
-    void ResetAttack()
-    {
-        if (!isAttack)
-        {
-
         }
     }
 
@@ -129,16 +119,29 @@ public class PlayerController : MonoBehaviour
         if (isAttack)
         {
             attackCount = 0;
+            isAttack = false;
             ChangeAnimationState(PLAYER_IDLE);
         }
     }
 
-    void CheckEndAnim()
+    void CheckEndAnim2()
     {
-
-
+        if (attackCount < 2)
+        {
+            ResetCombo();
+            ChangeAnimationState(PLAYER_IDLE);
+        }
     }
 
+    void CheckEndAnim3()
+    {
+        if (attackCount < 3)
+        {
+            ResetCombo();
+            ChangeAnimationState(PLAYER_IDLE);
+        }
+    }
+    #endregion
     void Moving()
     {
         //Moving
@@ -162,7 +165,6 @@ public class PlayerController : MonoBehaviour
 
     void HandleAnimation()
     {
-        if (isAttack) return;
         //Fall Anim
         if (Mathf.Abs(rb.velocity.y) > 0.5f && rb.velocity.y < -1f && !IsGrounded())
         {
@@ -226,12 +228,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
     }
-
-    private bool IsGrounded()
-    {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-    }
-
     void Flip()
     {
         if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
@@ -241,6 +237,11 @@ public class PlayerController : MonoBehaviour
             localScale.x *= -1f;
             transform.localScale = localScale;
         }
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }
 
     void ChangeAnimationState(string newState)
