@@ -41,9 +41,18 @@ public class PlayerController : MonoBehaviour
     const string PLAYER_JUMP_ATTACK = "PlayerJumpAttack";
     const string PLAYER_MELEE_ATTACK = "PlayerMeleeAttack";
 
+    //AttackCombo
+    const string PLAYER_ATTACK_1 = "PlayerAttack_1";
+    const string PLAYER_ATTACK_2 = "PlayerAttack_2";
+    const string PLAYER_ATTACK_3 = "PlayerAttack_3";
+
+    [SerializeField] int attackCount;
+    [SerializeField] bool doneAnim;
     public SpriteRenderer spriteRenderer;
     GhostController ghostController;
 
+
+    public float timeAttack = 2f;
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -59,7 +68,7 @@ public class PlayerController : MonoBehaviour
         Jumping();
         Flip();
         Dashing();
-
+        Attack();
         HandleAnimation();
     }
 
@@ -71,6 +80,63 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+    }
+
+    void Attack()
+    {
+        if (isAttack)
+        {
+            timeAttack -= Time.deltaTime;
+            if (timeAttack < 0)
+            {
+                ResetCombo();
+                isAttack = false;
+            }
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            isAttack = true;
+            attackCount++;
+            timeAttack = 2f;
+            if (attackCount == 1)
+            {
+                ChangeAnimationState(PLAYER_ATTACK_1);
+                doneAnim = true;
+            }
+            else if (attackCount == 2)
+            {
+                ChangeAnimationState(PLAYER_ATTACK_2);
+                doneAnim = true;
+            }
+            else if (attackCount == 3)
+            {
+                ChangeAnimationState(PLAYER_ATTACK_3);
+                doneAnim = true;
+            }
+        }
+    }
+
+    void ResetAttack()
+    {
+        if (!isAttack)
+        {
+
+        }
+    }
+
+    void ResetCombo()
+    {
+        if (isAttack)
+        {
+            attackCount = 0;
+            ChangeAnimationState(PLAYER_IDLE);
+        }
+    }
+
+    void CheckEndAnim()
+    {
+
+
     }
 
     void Moving()
@@ -96,6 +162,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleAnimation()
     {
+        if (isAttack) return;
         //Fall Anim
         if (Mathf.Abs(rb.velocity.y) > 0.5f && rb.velocity.y < -1f && !IsGrounded())
         {
