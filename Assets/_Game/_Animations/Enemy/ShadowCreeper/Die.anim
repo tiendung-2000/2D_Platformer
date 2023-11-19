@@ -20,14 +20,22 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 21300000, guid: e90cd91a6e32d4645b79616beb7ebf40, type: 3}
+      value: {fileID: 21300000, guid: cf6dec8da3303aa4499a5309e6e2922b, type: 3}
     - time: 0.083333336
-      value: {fileID: 21300000, guid: ed2bff8d5ad394d45a8a86114c2f6df8, type: 3}
+      value: {fileID: 21300000, guid: 7e882ab1475266f409e05ea0b6e18cc0, type: 3}
     - time: 0.16666667
-      value: {fileID: 21300000, guid: cc623f18741553044bd09b28d61fefe5, type: 3}
+      value: {fileID: 21300000, guid: 89779d60a524adc4ea39566741f32056, type: 3}
     - time: 0.25
-      value: {fileID: 21300000, guid: f75d2f2e6e8e4ad4fa24781e196aef12, type: 3}
+      value: {fileID: 21300000, guid: 2088ac4c6dad11a4ba8a5aa1ac9b725a, type: 3}
     - time: 0.33333334
+      value: {fileID: 21300000, guid: e90cd91a6e32d4645b79616beb7ebf40, type: 3}
+    - time: 0.41666666
+      value: {fileID: 21300000, guid: ed2bff8d5ad394d45a8a86114c2f6df8, type: 3}
+    - time: 0.5
+      value: {fileID: 21300000, guid: cc623f18741553044bd09b28d61fefe5, type: 3}
+    - time: 0.5833333
+      value: {fileID: 21300000, guid: f75d2f2e6e8e4ad4fa24781e196aef12, type: 3}
+    - time: 0.6666667
       value: {fileID: 21300000, guid: f75d2f2e6e8e4ad4fa24781e196aef12, type: 3}
     attribute: m_Sprite
     path: 
@@ -48,6 +56,10 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
+    - {fileID: 21300000, guid: cf6dec8da3303aa4499a5309e6e2922b, type: 3}
+    - {fileID: 21300000, guid: 7e882ab1475266f409e05ea0b6e18cc0, type: 3}
+    - {fileID: 21300000, guid: 89779d60a524adc4ea39566741f32056, type: 3}
+    - {fileID: 21300000, guid: 2088ac4c6dad11a4ba8a5aa1ac9b725a, type: 3}
     - {fileID: 21300000, guid: e90cd91a6e32d4645b79616beb7ebf40, type: 3}
     - {fileID: 21300000, guid: ed2bff8d5ad394d45a8a86114c2f6df8, type: 3}
     - {fileID: 21300000, guid: cc623f18741553044bd09b28d61fefe5, type: 3}
@@ -58,7 +70,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.35000002
+    m_StopTime: 0.68333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -77,4 +89,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.6666667
+    functionName: OnDespawn
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
