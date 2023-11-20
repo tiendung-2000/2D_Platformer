@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4581449327009249250}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalPosition: {x: 0.901, y: -0.171, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -156,12 +156,13 @@ MonoBehaviour:
   curHealth: 0
   maxHealth: 100
   speed: 3
-  rayCastLength: 0
+  radiusCheck: 0.3
   isFacingRight: 0
   isGrounded: 0
   isMoving: 0
   isAttack: 0
   isLive: 0
+  isTouchConner: 0
   animator: {fileID: 5799868748338567530}
   currentState: 
   player: {fileID: 0}
@@ -170,6 +171,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  connerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   type: 1
 --- !u!61 &378757591
 BoxCollider2D:

@@ -42,6 +42,8 @@ public class GhostController : MonoBehaviour
         spriteRenderer = ghostObj.GetComponent<SpriteRenderer>();
 
         spriteRenderer.sprite = player.spriteRenderer.sprite;
+        spriteRenderer.sortingLayerName = "Player";
+        spriteRenderer.sortingOrder = -1;
         spriteRenderer.color = color;
         if (material != null)
         {
