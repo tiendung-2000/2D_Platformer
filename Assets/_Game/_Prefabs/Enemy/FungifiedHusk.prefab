@@ -42,9 +42,9 @@ GameObject:
   - component: {fileID: 1148288477038485601}
   - component: {fileID: 1148288477038485600}
   - component: {fileID: 1148288477038485631}
-  - component: {fileID: 7150854362315951095}
-  - component: {fileID: 1740817230304988617}
   - component: {fileID: 1477313194071478929}
+  - component: {fileID: 1740817230304988617}
+  - component: {fileID: 7150854362315951095}
   m_Layer: 0
   m_Name: FungifiedHusk
   m_TagString: Enemy
@@ -65,6 +65,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3270720282491343963}
+  - {fileID: 4404313799398029679}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -141,66 +142,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7150854362315951095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1148288477038485630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8185bb0801b620e4ab2aa71d7b4b0394, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  curHealth: 0
-  maxHealth: 0
-  speed: 0
-  radiusCheck: 0.3
-  isFacingRight: 0
-  isGrounded: 0
-  isMoving: 0
-  isAttack: 0
-  isLive: 0
-  isTouchConner: 0
-  animator: {fileID: 1148288477038485631}
-  currentState: 
-  player: {fileID: 0}
-  groundDetection: {fileID: 3270720282491343963}
-  rb: {fileID: 1477313194071478929}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  connerLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  type: 2
---- !u!61 &1740817230304988617
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1148288477038485630}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.12, y: 1.74}
-    newSize: {x: 1.12, y: 1.74}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.12, y: 1.74}
-  m_EdgeRadius: 0
 --- !u!50 &1477313194071478929
 Rigidbody2D:
   serializedVersion: 4
@@ -222,3 +163,92 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!61 &1740817230304988617
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148288477038485630}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.014239341, y: -0.046786368}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.12, y: 1.74}
+    newSize: {x: 1.12, y: 1.74}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.7579141, y: 1.4348716}
+  m_EdgeRadius: 0
+--- !u!114 &7150854362315951095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148288477038485630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8185bb0801b620e4ab2aa71d7b4b0394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curHealth: 0
+  maxHealth: 0
+  speed: 0
+  radiusCheck: 0.1
+  isFacingRight: 0
+  isGrounded: 0
+  isMoving: 0
+  isAttack: 0
+  isLive: 0
+  isTouchConner: 0
+  animator: {fileID: 1148288477038485631}
+  currentState: 
+  player: {fileID: 0}
+  groundDetection: {fileID: 3270720282491343963}
+  connerDetection: {fileID: 4404313799398029679}
+  rb: {fileID: 1477313194071478929}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  type: 2
+--- !u!1 &5372446551433152715
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4404313799398029679}
+  m_Layer: 0
+  m_Name: ConnerDetect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4404313799398029679
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5372446551433152715}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.785, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1148288477038485601}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

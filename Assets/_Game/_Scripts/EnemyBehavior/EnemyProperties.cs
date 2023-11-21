@@ -1,6 +1,3 @@
-using Spine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyProperties : MonoBehaviour
@@ -37,9 +34,9 @@ public class EnemyProperties : MonoBehaviour
 
     [SerializeField] protected PlayerController player;
     [SerializeField] protected Transform groundDetection;
+    [SerializeField] protected Transform connerDetection;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected LayerMask groundLayer;
-    [SerializeField] protected LayerMask connerLayer;
 
     [SerializeField] protected EnemyType type;
 
@@ -81,19 +78,8 @@ public class EnemyProperties : MonoBehaviour
     #region Patrol Enemy
     public virtual void PatrolMovement()
     {
-        //transform.Translate(Vector2.right * speed * Time.deltaTime);
-        //transform.position = Vector2.right * speed * Time.deltaTime;
-
-        //RaycastHit2D groundInfo = Physics2D.Raycast(groundDetection.position, Vector2.down, rayCastLength);
-        //RaycastHit2D connerInfo = Physics2D.Raycast(groundDetection.position, Vector2.right, rayCastLength);
-
-        //if (groundInfo.collider == false)
-        //{
-        //    Flip();
-        //}
-
         isGrounded = Physics2D.OverlapCircle(groundDetection.position, radiusCheck, groundLayer);
-        isTouchConner = Physics2D.OverlapCircle(groundDetection.position, radiusCheck, connerLayer);
+        isTouchConner = Physics2D.OverlapCircle(connerDetection.position, radiusCheck, groundLayer);
 
         if (!isGrounded || isTouchConner)
         {
@@ -133,10 +119,6 @@ public class EnemyProperties : MonoBehaviour
     #endregion
 
     #region Flip
-    //public virtual void CheckFlip()
-    //{
-
-    //}
     void Flip()
     {
         if (isFacingRight == true)
@@ -150,22 +132,6 @@ public class EnemyProperties : MonoBehaviour
             isFacingRight = true;
         }
     }
-
-    //private void OnCollisionEnter2D(Collision2D other)
-    //{
-    //    if (other.gameObject.layer == connerLayer)
-    //    {
-    //        isTouchConner = true;
-    //    }
-    //}
-
-    //private void OnCollisionExit2D(Collision2D other)
-    //{
-    //    if (other.gameObject.layer == connerLayer)
-    //    {
-    //        isTouchConner = false;
-    //    }
-    //}
     #endregion
     #endregion
 
@@ -190,7 +156,7 @@ public class EnemyProperties : MonoBehaviour
         }
     }
 
-    public virtual void Dead()
+    public virtual void Die()
     {
 
     }
@@ -213,16 +179,13 @@ public class EnemyProperties : MonoBehaviour
     }
 
     #region DebugGizmos
-
     public virtual void OnDrawGizmos()
     {
         if (groundDetection != null)
         {
-            //Debug.DrawRay(groundDetection.position, Vector2.down, Color.red);
-            //Debug.DrawRay(groundDetection.position, Vector2.right, Color.red);
-
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundDetection.position, radiusCheck);
+            Gizmos.DrawWireSphere(connerDetection.position, radiusCheck);
         }
     }
     #endregion
