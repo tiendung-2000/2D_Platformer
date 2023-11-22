@@ -10,8 +10,10 @@ public class LevelManager : MonoBehaviour
     public List<Level> level;
     public int currentLevel;
 
+    public BackgroundController bgControl;
+    public bool isHasBg;
     public CinemachineConfiner2D confiner2D;
-    public CinemachineVirtualCamera virtualCamera;
+    //public CinemachineVirtualCamera virtualCamera;
 
     private void Awake()
     {
@@ -28,5 +30,6 @@ public class LevelManager : MonoBehaviour
     void SpawnLevel(int curLevel)
     {
         GameObject levelPrefab = Instantiate(level[curLevel].gameObject, transform.position, transform.rotation);
+        bgControl.SetUpBackground(currentLevel);
     }
 }

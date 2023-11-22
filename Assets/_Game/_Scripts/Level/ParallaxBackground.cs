@@ -6,7 +6,7 @@ public class ParallaxBackground : MonoBehaviour
     [SerializeField] private bool infiniteHorizontal;
     [SerializeField] private bool infiniteVertical;
 
-    public CinemachineVirtualCamera virtualCamera;
+    //public CinemachineVirtualCamera virtualCamera;
 
     private Transform cameraTransform;
     private Vector3 lastCameraPosition;
@@ -15,11 +15,11 @@ public class ParallaxBackground : MonoBehaviour
 
     private void Start()
     {
-        transform.localPosition = new Vector3(0, 1, 0);
+        //transform.localPosition = new Vector3(0, 1, 0);
 
-        virtualCamera = LevelManager.Ins.virtualCamera;
+        //virtualCamera = LevelManager.Ins.virtualCamera;
 
-        cameraTransform = virtualCamera.transform;
+        cameraTransform = Camera.main.transform;
         lastCameraPosition = cameraTransform.position;
         Sprite sprite = GetComponent<SpriteRenderer>().sprite;
         Texture2D texture = sprite.texture;
@@ -29,25 +29,28 @@ public class ParallaxBackground : MonoBehaviour
 
     private void LateUpdate()
     {
-        Vector3 deltaMovement = cameraTransform.position - lastCameraPosition;
-        transform.position += new Vector3(deltaMovement.x * parallaxEffectMultiplier.x, deltaMovement.y * parallaxEffectMultiplier.y);
-        lastCameraPosition = cameraTransform.position;
-
-        if (infiniteHorizontal)
+        if (LevelManager.Ins.isHasBg)
         {
-            if (Mathf.Abs(cameraTransform.position.x - transform.position.x) >= textureUnitSizeX)
+            Vector3 deltaMovement = cameraTransform.position - lastCameraPosition;
+            transform.position += new Vector3(deltaMovement.x * parallaxEffectMultiplier.x, deltaMovement.y * parallaxEffectMultiplier.y);
+            lastCameraPosition = cameraTransform.position;
+
+            if (infiniteHorizontal)
             {
-                float offsetPositionX = (cameraTransform.position.x - transform.position.x) % textureUnitSizeX;
-                transform.position = new Vector3(cameraTransform.position.x + offsetPositionX, transform.position.y);
+                if (Mathf.Abs(cameraTransform.position.x - transform.position.x) >= textureUnitSizeX)
+                {
+                    float offsetPositionX = (cameraTransform.position.x - transform.position.x) % textureUnitSizeX;
+                    transform.position = new Vector3(cameraTransform.position.x + offsetPositionX, transform.position.y);
+                }
             }
-        }
 
-        if (infiniteVertical)
-        {
-            if (Mathf.Abs(cameraTransform.position.y - transform.position.y) >= textureUnitSizeY)
+            if (infiniteVertical)
             {
-                float offsetPositionY = (cameraTransform.position.y - transform.position.y) % textureUnitSizeY;
-                transform.position = new Vector3(transform.position.x, cameraTransform.position.y + offsetPositionY);
+                if (Mathf.Abs(cameraTransform.position.y - transform.position.y) >= textureUnitSizeY)
+                {
+                    float offsetPositionY = (cameraTransform.position.y - transform.position.y) % textureUnitSizeY;
+                    transform.position = new Vector3(transform.position.x, cameraTransform.position.y + offsetPositionY);
+                }
             }
         }
     }
