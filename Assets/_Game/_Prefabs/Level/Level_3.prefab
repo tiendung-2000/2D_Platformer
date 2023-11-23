@@ -143,8 +143,8 @@ MonoBehaviour:
   startPoint: {fileID: 5587378186615021210}
   bouncingCollider: {fileID: 7780870079277508637}
   layer1Spr: {fileID: 21300000, guid: b8a48f543529b3649bb501a8c5704842, type: 3}
-  layer2Spr: {fileID: 21300000, guid: b98c920f01bb7f3438ae1dda8e5ac714, type: 3}
-  layer3Spr: {fileID: 21300000, guid: 6eeb56b52aaaa954795d5236b4edd13f, type: 3}
+  layer2Spr: {fileID: 21300000, guid: a475bf2557a084440beb99b65ba1647c, type: 3}
+  layer3Spr: {fileID: 21300000, guid: b98c920f01bb7f3438ae1dda8e5ac714, type: 3}
 --- !u!1 &5587378187044128041
 GameObject:
   m_ObjectHideFlags: 0

@@ -467,7 +467,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.9, y: 1.3, z: -10}
+  m_LocalPosition: {x: -21.571634, y: 1.219558, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -797,7 +797,7 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 1907297778}
+  m_LookAt: {fileID: 2142061833}
   m_Follow: {fileID: 2142061833}
   m_Lens:
     FieldOfView: 40
@@ -825,7 +825,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 870775083}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -18.9, y: 1.3, z: -10}
+  m_LocalPosition: {x: -21.571634, y: 1.219558, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -895,7 +895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ad980451443d70438faac0bc6c235a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TrackedObjectOffset: {x: 0, y: 2, z: 0}
+  m_TrackedObjectOffset: {x: -2.671635, y: 1.919558, z: 0}
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
@@ -985,7 +985,7 @@ MonoBehaviour:
   - {fileID: 846564555754903948, guid: 3544e04f2a2d5064298cf591f3e02993, type: 3}
   - {fileID: 4285326589122525704, guid: abf6dbc1f2665dc439f4fa70622370a7, type: 3}
   - {fileID: 6325430239499261648, guid: 0ebe13c6065793a43a188cc1bebe09d6, type: 3}
-  currentLevel: 7
+  currentLevel: 0
   bgControl: {fileID: 1907297779}
   isHasBg: 0
   confiner2D: {fileID: 870775084}
@@ -1110,7 +1110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3ecbe11e85475647b4814609206f22e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxEffectMultiplier: {x: 0.7, y: 1}
+  parallaxEffectMultiplier: {x: 0.7, y: 0}
   infiniteHorizontal: 1
   infiniteVertical: 1
 --- !u!212 &1316552190
@@ -1158,7 +1158,7 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
+  m_DrawMode: 2
   m_Size: {x: 100, y: 10.8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -1215,7 +1215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3ecbe11e85475647b4814609206f22e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxEffectMultiplier: {x: 0.6, y: 1}
+  parallaxEffectMultiplier: {x: 0.6, y: 0}
   infiniteHorizontal: 1
   infiniteVertical: 1
 --- !u!212 &1424238930
@@ -1263,7 +1263,7 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
+  m_DrawMode: 2
   m_Size: {x: 19.2, y: 10.8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -1403,7 +1403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3ecbe11e85475647b4814609206f22e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxEffectMultiplier: {x: 0.5, y: 1}
+  parallaxEffectMultiplier: {x: 0.5, y: 0}
   infiniteHorizontal: 1
   infiniteVertical: 1
 --- !u!212 &1563260586
@@ -1451,8 +1451,8 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 100, y: 10.8}
+  m_DrawMode: 2
+  m_Size: {x: 57.6, y: 10.8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -1790,7 +1790,8 @@ GameObject:
   - component: {fileID: 2142061834}
   - component: {fileID: 2142061835}
   - component: {fileID: 2142061837}
-  m_Layer: 0
+  - component: {fileID: 2142061840}
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1862,6 +1863,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  platformLayer:
+    serializedVersion: 2
+    m_Bits: 128
   animator: {fileID: 0}
   currentState: 
   isMoving: 0
@@ -1988,6 +1992,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2142061840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142061832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dd09d04e5168c24bbd4fa206ffd6178, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  oneWayPlatformLayerName: OneWayPlatform
+  playerLayerName: Player
 --- !u!1001 &266065818053270376
 PrefabInstance:
   m_ObjectHideFlags: 0

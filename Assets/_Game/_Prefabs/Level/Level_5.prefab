@@ -22302,10 +22302,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelID: 5
   startPoint: {fileID: 846564554610277466}
-  bouncingCollider: {fileID: 0}
+  bouncingCollider: {fileID: 702041464498345436}
   layer1Spr: {fileID: 21300000, guid: 22cb98b1d61b5104aa70f4162308a93a, type: 3}
-  layer2Spr: {fileID: 21300000, guid: c5eb99b66502dab4a86881451b50fc21, type: 3}
-  layer3Spr: {fileID: 21300000, guid: 8513fdf329f0ce149a0a1da6461c2a24, type: 3}
+  layer2Spr: {fileID: 21300000, guid: 389fbdd9c3a42544399aaaaddf8559ce, type: 3}
+  layer3Spr: {fileID: 21300000, guid: c5eb99b66502dab4a86881451b50fc21, type: 3}
 --- !u!1 &1081709224030667865
 GameObject:
   m_ObjectHideFlags: 0

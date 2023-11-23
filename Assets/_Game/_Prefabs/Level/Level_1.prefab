@@ -51,8 +51,8 @@ MonoBehaviour:
   startPoint: {fileID: 271259372812473991}
   bouncingCollider: {fileID: 5054096234274856788}
   layer1Spr: {fileID: 21300000, guid: 990616a8257161b41909a58b8fb4801e, type: 3}
-  layer2Spr: {fileID: 21300000, guid: 33d5bbb1b8425c04da482b72244df3d9, type: 3}
-  layer3Spr: {fileID: 21300000, guid: 637c8317b59ea38489c0df161ee09696, type: 3}
+  layer2Spr: {fileID: 21300000, guid: 3544e36603bb27249868e048fb55344d, type: 3}
+  layer3Spr: {fileID: 21300000, guid: 33d5bbb1b8425c04da482b72244df3d9, type: 3}
 --- !u!1 &271259372812473992
 GameObject:
   m_ObjectHideFlags: 0
@@ -12295,9 +12295,9 @@ Tilemap:
       e33: 1
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: 5.5278e-41, g: 5.5278e-41, b: 5.5278e-41, a: 5.5278e-41}
+    m_Data: {r: 4.0744e-41, g: 4.0744e-41, b: 4.0744e-41, a: 4.0744e-41}
   - m_RefCount: 1211
-    m_Data: {r: 0.9316544, g: 0.4388556, b: 0.46894374, a: 1}
+    m_Data: {r: 0.7686425, g: 0.42227525, b: 0.43630022, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}

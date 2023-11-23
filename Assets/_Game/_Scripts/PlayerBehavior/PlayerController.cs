@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask platformLayer;
 
     [Header("Animation State")]
     [SerializeField] private Animator animator;
@@ -23,6 +24,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool isAttack;
     [SerializeField] bool isJumping;
     [SerializeField] bool isFalling;
+    //public bool isGround;
+    //public bool isPlatform;
 
     [Header("Dashing")]
     [SerializeField] bool canDash = true;
@@ -69,7 +72,8 @@ public class PlayerController : MonoBehaviour
             horizontal = 0;
             return;
         }
-
+        //isGround = IsGrounded();
+        //isPlatform = IsPlatform();
         Moving();
         Jumping();
         Flip();
@@ -99,17 +103,20 @@ public class PlayerController : MonoBehaviour
                 isAttack = false;
             }
         }
-        if (Input.GetMouseButtonDown(0) && IsGrounded())
-        {
-            isAttack = true;
-            attackCount++;
-            timeAttack = 2f;
-            if (attackCount == 1)
+        if (Input.GetMouseButtonDown(0)/* && IsGrounded() || Input.GetMouseButtonDown(0) && IsPlatform()*/)
+            if (IsGrounded() || IsPlatform())
             {
-                ChangeAnimationState(PLAYER_ATTACK_1);
-                doneAnim = true;
+                {
+                    isAttack = true;
+                    attackCount++;
+                    timeAttack = 2f;
+                    if (attackCount == 1)
+                    {
+                        ChangeAnimationState(PLAYER_ATTACK_1);
+                        doneAnim = true;
+                    }
+                }
             }
-        }
     }
 
     //void JumpAttack()
@@ -157,10 +164,13 @@ public class PlayerController : MonoBehaviour
     void Jumping()
     {
         //Jumping
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        if (Input.GetButtonDown("Jump")/* && IsGrounded()*/)
         {
-            isJumping = true;
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            if (IsGrounded() || IsPlatform())
+            {
+                isJumping = true;
+                rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            }
         }
 
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
@@ -171,37 +181,75 @@ public class PlayerController : MonoBehaviour
 
     void HandleAnimation()
     {
-        //Fall Anim
-        if (Mathf.Abs(rb.velocity.y) > 0.5f && rb.velocity.y < -1f && !IsGrounded())
+        ////Fall Anim
+        //if (Mathf.Abs(rb.velocity.y) > 0.5f && rb.velocity.y < -1f /*&& !IsGrounded()*/)
+        //{
+        //    if (!IsGrounded() || !IsPlatform())
+        //    {
+        //        if (isFalling == false/* && isAttack == false*/)
+        //        {
+        //            ChangeAnimationState(PLAYER_FALL);
+        //            isJumping = false;
+        //            isFalling = true;
+        //        }
+        //    }
+        //}
+        //else
+        //{
+
+        //}
+
+        ////Jump Anim
+        //if (/*!IsGrounded() && */isJumping == true)
+        //{
+        //    if (!IsGrounded() || !IsPlatform())
+        //    {
+        //        ChangeAnimationState(PLAYER_JUMP);
+        //    }
+        //}
+
+        ////Move Anim
+        //if (horizontal == 0/* && IsGrounded()*/)
+        //{
+        //    if (IsGrounded() || IsPlatform())
+        //    {
+        //        isMoving = false;
+        //        ChangeAnimationState(PLAYER_IDLE);
+        //    }
+        //}
+        //else if (horizontal != 0/* && IsGrounded()*/)
+        //{
+        //    if (IsGrounded() || IsPlatform())
+        //    {
+        //        isMoving = true;
+        //        ChangeAnimationState(PLAYER_WALK);
+        //    }
+        //}
+        if (Mathf.Abs(rb.velocity.y) > 0.05f && rb.velocity.y > 0)
         {
-            if (isFalling == false/* && isAttack == false*/)
-            {
-                ChangeAnimationState(PLAYER_FALL);
-                isJumping = false;
-                isFalling = true;
-            }
+            ChangeAnimationState(PLAYER_JUMP);
+
+        }
+        else if (Mathf.Abs(rb.velocity.y) > 0.05f && rb.velocity.y < -2f)
+        {
+            ChangeAnimationState(PLAYER_FALL);
         }
         else
         {
-            isFalling = false;
-        }
-
-        //Jump Anim
-        if (!IsGrounded() && isJumping == true)
-        {
-            ChangeAnimationState(PLAYER_JUMP);
-        }
-
-        //Move Anim
-        if (horizontal == 0 && IsGrounded())
-        {
-            isMoving = false;
-            ChangeAnimationState(PLAYER_IDLE);
-        }
-        else if (horizontal != 0 && IsGrounded())
-        {
-            isMoving = true;
-            ChangeAnimationState(PLAYER_WALK);
+            if (horizontal == 0)
+            {
+                if (IsGrounded() || IsPlatform())
+                {
+                    ChangeAnimationState(PLAYER_IDLE);
+                }
+            }
+            else if (horizontal != 0)
+            {
+                if (IsGrounded() || IsPlatform())
+                {
+                    ChangeAnimationState(PLAYER_WALK);
+                }
+            }
         }
     }
 
@@ -249,6 +297,11 @@ public class PlayerController : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.5f, groundLayer);
+    }
+
+    private bool IsPlatform()
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, 0.5f, platformLayer);
     }
 
     void ChangeAnimationState(string newState)
