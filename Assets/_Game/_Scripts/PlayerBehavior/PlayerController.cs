@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool doneAnim;
     public SpriteRenderer spriteRenderer;
     GhostController ghostController;
-
+    //a
 
     public float timeAttack = 2f;
     void Start()
