@@ -22,9 +22,9 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        SpawnLevel(currentLevel);
-        confiner2D.m_BoundingShape2D = level[currentLevel].bouncingCollider;
-        player.gameObject.transform.position = level[currentLevel].startPoint.transform.position;
+        //SpawnLevel(currentLevel);
+        //confiner2D.m_BoundingShape2D = level[currentLevel].bouncingCollider;
+        //player.gameObject.transform.position = level[currentLevel].startPoint.transform.position;
     }
 
     void SpawnLevel(int curLevel)

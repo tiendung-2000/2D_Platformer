@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public int currentHealth;
+    public int maxHealth;
+    public int damage;
+
     [Header("Movement")]
     [SerializeField] float horizontal;
     [SerializeField] float speed;
@@ -35,23 +39,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashingCooldown;
 
     //Animation State
-    const string PLAYER_IDLE = "PlayerIdle";
-    const string PLAYER_WALK = "PlayerWalk";
-    const string PLAYER_JUMP = "PlayerJump";
-    const string PLAYER_FALL = "PlayerFalling";
-    const string PLAYER_DASH = "PlayerDashing";
-    const string PLAYER_JUMP_ATTACK = "PlayerJumpAttack";
+    const string PLAYER_IDLE = "Idle";
+    const string PLAYER_WALK = "Walk";
+    const string PLAYER_JUMP = "Jump";
+    const string PLAYER_FALL = "Falling";
+    const string PLAYER_DASH = "Dashing";
 
     //AttackCombo
-    const string PLAYER_ATTACK_1 = "PlayerAttack_1";
-    const string PLAYER_ATTACK_2 = "PlayerAttack_2";
-    const string PLAYER_ATTACK_3 = "PlayerAttack_3";
+    const string PLAYER_ATTACK_1 = "Attack_1";
+    const string PLAYER_ATTACK_2 = "Attack_2";
+    const string PLAYER_ATTACK_3 = "Attack_3";
 
+    [Header("Attack")]
     [SerializeField] int attackCount;
     [SerializeField] bool doneAnim;
     public SpriteRenderer spriteRenderer;
     GhostController ghostController;
-
 
     public float timeAttack = 2f;
     void Start()
@@ -66,14 +69,11 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Attack();
-        //JumpAttack();
         if (isAttack)
         {
             horizontal = 0;
             return;
         }
-        //isGround = IsGrounded();
-        //isPlatform = IsPlatform();
         Moving();
         Jumping();
         Flip();
@@ -87,7 +87,6 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
     }
 
@@ -103,32 +102,22 @@ public class PlayerController : MonoBehaviour
                 isAttack = false;
             }
         }
-        if (Input.GetMouseButtonDown(0)/* && IsGrounded() || Input.GetMouseButtonDown(0) && IsPlatform()*/)
+        if (Input.GetMouseButtonDown(0))
+        {
             if (IsGrounded() || IsPlatform())
             {
+                isAttack = true;
+                attackCount++;
+                timeAttack = 2f;
+                if (attackCount == 1)
                 {
-                    isAttack = true;
-                    attackCount++;
-                    timeAttack = 2f;
-                    if (attackCount == 1)
-                    {
-                        ChangeAnimationState(PLAYER_ATTACK_1);
-                        doneAnim = true;
-                    }
+                    ChangeAnimationState(PLAYER_ATTACK_1);
                 }
+
+                if (attackCount > 1) doneAnim = true;
             }
+        }
     }
-
-    //void JumpAttack()
-    //{
-    //    if (Input.GetMouseButtonDown(0) && !IsGrounded())
-    //    {
-    //        isAttack = true;
-    //        Debug.Log("VAO DAY");
-    //        ChangeAnimationState(PLAYER_JUMP_ATTACK);
-    //    }
-    //}
-
     void ResetCombo()
     {
         if (isAttack)
@@ -140,18 +129,28 @@ public class PlayerController : MonoBehaviour
     }
     void CheckEndAnim2()
     {
-        if (attackCount < 2)
+        if (attackCount > 1 && doneAnim)
+        {
+            doneAnim = false;
+            attackCount++;
+            ChangeAnimationState(PLAYER_ATTACK_2);
+        }
+        else
         {
             ResetCombo();
-            ChangeAnimationState(PLAYER_IDLE);
         }
     }
     void CheckEndAnim3()
     {
-        if (attackCount < 3)
+        if (attackCount > 2 && doneAnim)
+        {
+            doneAnim = false;
+            attackCount++;
+            ChangeAnimationState(PLAYER_ATTACK_3);
+        }
+        else
         {
             ResetCombo();
-            ChangeAnimationState(PLAYER_IDLE);
         }
     }
     #endregion
@@ -164,11 +163,10 @@ public class PlayerController : MonoBehaviour
     void Jumping()
     {
         //Jumping
-        if (Input.GetButtonDown("Jump")/* && IsGrounded()*/)
+        if (Input.GetButtonDown("Jump"))
         {
             if (IsGrounded() || IsPlatform())
             {
-                isJumping = true;
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
             }
         }
@@ -181,50 +179,6 @@ public class PlayerController : MonoBehaviour
 
     void HandleAnimation()
     {
-        ////Fall Anim
-        //if (Mathf.Abs(rb.velocity.y) > 0.5f && rb.velocity.y < -1f /*&& !IsGrounded()*/)
-        //{
-        //    if (!IsGrounded() || !IsPlatform())
-        //    {
-        //        if (isFalling == false/* && isAttack == false*/)
-        //        {
-        //            ChangeAnimationState(PLAYER_FALL);
-        //            isJumping = false;
-        //            isFalling = true;
-        //        }
-        //    }
-        //}
-        //else
-        //{
-
-        //}
-
-        ////Jump Anim
-        //if (/*!IsGrounded() && */isJumping == true)
-        //{
-        //    if (!IsGrounded() || !IsPlatform())
-        //    {
-        //        ChangeAnimationState(PLAYER_JUMP);
-        //    }
-        //}
-
-        ////Move Anim
-        //if (horizontal == 0/* && IsGrounded()*/)
-        //{
-        //    if (IsGrounded() || IsPlatform())
-        //    {
-        //        isMoving = false;
-        //        ChangeAnimationState(PLAYER_IDLE);
-        //    }
-        //}
-        //else if (horizontal != 0/* && IsGrounded()*/)
-        //{
-        //    if (IsGrounded() || IsPlatform())
-        //    {
-        //        isMoving = true;
-        //        ChangeAnimationState(PLAYER_WALK);
-        //    }
-        //}
         if (Mathf.Abs(rb.velocity.y) > 0.05f && rb.velocity.y > 0)
         {
             ChangeAnimationState(PLAYER_JUMP);
@@ -238,9 +192,13 @@ public class PlayerController : MonoBehaviour
         {
             if (horizontal == 0)
             {
-                if (IsGrounded() || IsPlatform())
+                if ((IsGrounded() || IsPlatform()) && !isDashing)
                 {
                     ChangeAnimationState(PLAYER_IDLE);
+                }
+                else if ((IsGrounded() || IsPlatform()) && isDashing)
+                {
+                    ChangeAnimationState(PLAYER_DASH);
                 }
             }
             else if (horizontal != 0)
@@ -268,19 +226,23 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator Dash()
     {
-        canDash = false;
         isDashing = true;
+        ChangeAnimationState(PLAYER_DASH);
+        canDash = false;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
         ghostController.enabled = true;
-        ChangeAnimationState(PLAYER_DASH);
+
         yield return new WaitForSeconds(dashingTime);
-        ghostController.enabled = false;
+
         ChangeAnimationState(PLAYER_IDLE);
+        ghostController.enabled = false;
         rb.gravityScale = originalGravity;
         isDashing = false;
+
         yield return new WaitForSeconds(dashingCooldown);
+
         canDash = true;
     }
     void Flip()
@@ -310,13 +272,24 @@ public class PlayerController : MonoBehaviour
         if (currentState == newState) return;
 
         //play the animation
-        animator.Play(newState);
+
+        if (currentState != string.Empty)
+        {
+            animator.SetBool(currentState, false);
+        }
+
+        animator.SetBool(newState, true);
 
         //reassign the current state
         currentState = newState;
     }
 
     public void TakeDamage()
+    {
+
+    }
+
+    public void KnockBack()
     {
 
     }
