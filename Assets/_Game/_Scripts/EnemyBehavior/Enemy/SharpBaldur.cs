@@ -1,12 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
 public class SharpBaldur : EnemyProperties
 {
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-        OnInit();
+        
     }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
-        GuardingMovement();
+        
     }
 }

@@ -6,10 +6,8 @@ public class EnemyProperties : MonoBehaviour
     [SerializeField] protected int curHealth;
     [SerializeField] protected int maxHealth;
     [SerializeField] protected int speed;
-    [SerializeField] protected int damage;
 
     [SerializeField] float radiusCheck;
-    [SerializeField] float distanceCheck;
 
     [Header("Bool")]
     [SerializeField] protected bool isFacingRight;
@@ -39,15 +37,19 @@ public class EnemyProperties : MonoBehaviour
     [SerializeField] protected Transform connerDetection;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected LayerMask groundLayer;
-    [SerializeField] protected LayerMask playerLayer;
 
     [SerializeField] protected EnemyType type;
 
-    public virtual void OnInit()
+    private void OnEnable()
+    {
+        OnInit();
+    }
+
+    void OnInit()
     {
         curHealth = maxHealth;
         isLive = true;
-        player = LevelManager.Ins.player;
+        player = GetComponent<PlayerController>();
         rb = GetComponent<Rigidbody2D>();
 
         CheckEnemyType();
@@ -112,7 +114,6 @@ public class EnemyProperties : MonoBehaviour
         if (isMoving)
         {
             ChangeAnimationState(WALK);
-            rb.velocity = transform.forward * speed;
         }
     }
     #endregion
@@ -133,11 +134,6 @@ public class EnemyProperties : MonoBehaviour
     }
     #endregion
     #endregion
-
-    public bool IsCatchPlayer()
-    {
-        return Physics2D.OverlapCircle(transform.position, distanceCheck, playerLayer);
-    }
 
     public virtual void GiveDamage(int damage)
     {
@@ -191,8 +187,6 @@ public class EnemyProperties : MonoBehaviour
             Gizmos.DrawWireSphere(groundDetection.position, radiusCheck);
             Gizmos.DrawWireSphere(connerDetection.position, radiusCheck);
         }
-        Gizmos.DrawWireSphere(transform.position, distanceCheck);
-
     }
     #endregion
 

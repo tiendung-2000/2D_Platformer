@@ -3,7 +3,7 @@ using UnityEngine;
 public class DropDown : MonoBehaviour
 {
     public string oneWayPlatformLayerName = "OneWayPlatform";
-    public string playerLayerName = "PlayerGroundBox";
+    public string playerLayerName = "Player";
 
     private void Update()
     {
