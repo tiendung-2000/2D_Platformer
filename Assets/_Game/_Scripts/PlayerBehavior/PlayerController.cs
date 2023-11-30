@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    IStatePlayer currentState;
+
     [Header("Movement")]
     [SerializeField] float horizontal;
     [SerializeField] float speed;
@@ -17,7 +19,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Animation State")]
     [SerializeField] private Animator animator;
-    [SerializeField] string currentState;
+    [SerializeField] string curAnimState;
 
     [Header("Boolean Behaviour")]
     [SerializeField] bool isMoving;
@@ -51,34 +53,36 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool doneAnim;
     public SpriteRenderer spriteRenderer;
     GhostController ghostController;
-    //a
 
     public float timeAttack = 2f;
+
+
     void Start()
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         ghostController = GetComponent<GhostController>();
-
         ghostController.enabled = false;
+
+        ChangeState(new IdleState());
     }
 
     private void Update()
     {
-        Attack();
-        //JumpAttack();
-        if (isAttack)
-        {
-            horizontal = 0;
-            return;
-        }
-        //isGround = IsGrounded();
-        //isPlatform = IsPlatform();
-        Moving();
-        Jumping();
-        Flip();
-        Dashing();
-        HandleAnimation();
+        //Attack();
+        ////JumpAttack();
+        //if (isAttack)
+        //{
+        //    horizontal = 0;
+        //    return;
+        //}
+        ////isGround = IsGrounded();
+        ////isPlatform = IsPlatform();
+        //Moving();
+        //Jumping();
+        //Flip();
+        //Dashing();
+        //HandleAnimation();
     }
 
     void FixedUpdate()
@@ -112,7 +116,7 @@ public class PlayerController : MonoBehaviour
                     timeAttack = 2f;
                     if (attackCount == 1)
                     {
-                        ChangeAnimationState(PLAYER_ATTACK_1);
+                        ChangeAnimation(PLAYER_ATTACK_1);
                         doneAnim = true;
                     }
                 }
@@ -135,7 +139,7 @@ public class PlayerController : MonoBehaviour
         {
             attackCount = 0;
             isAttack = false;
-            ChangeAnimationState(PLAYER_IDLE);
+            ChangeAnimation(PLAYER_IDLE);
         }
     }
     void CheckEndAnim2()
@@ -143,7 +147,7 @@ public class PlayerController : MonoBehaviour
         if (attackCount < 2)
         {
             ResetCombo();
-            ChangeAnimationState(PLAYER_IDLE);
+            ChangeAnimation(PLAYER_IDLE);
         }
     }
     void CheckEndAnim3()
@@ -151,17 +155,18 @@ public class PlayerController : MonoBehaviour
         if (attackCount < 3)
         {
             ResetCombo();
-            ChangeAnimationState(PLAYER_IDLE);
+            ChangeAnimation(PLAYER_IDLE);
         }
     }
     #endregion
-    void Moving()
+
+    public void Moving()
     {
         //Moving
         horizontal = Input.GetAxisRaw("Horizontal");
     }
 
-    void Jumping()
+    public void Jumping()
     {
         //Jumping
         if (Input.GetButtonDown("Jump")/* && IsGrounded()*/)
@@ -179,7 +184,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void HandleAnimation()
+    public void HandleAnimation()
     {
         ////Fall Anim
         //if (Mathf.Abs(rb.velocity.y) > 0.5f && rb.velocity.y < -1f /*&& !IsGrounded()*/)
@@ -227,12 +232,12 @@ public class PlayerController : MonoBehaviour
         //}
         if (Mathf.Abs(rb.velocity.y) > 0.05f && rb.velocity.y > 0)
         {
-            ChangeAnimationState(PLAYER_JUMP);
+            ChangeAnimation(PLAYER_JUMP);
 
         }
         else if (Mathf.Abs(rb.velocity.y) > 0.05f && rb.velocity.y < -2f)
         {
-            ChangeAnimationState(PLAYER_FALL);
+            ChangeAnimation(PLAYER_FALL);
         }
         else
         {
@@ -240,20 +245,20 @@ public class PlayerController : MonoBehaviour
             {
                 if (IsGrounded() || IsPlatform())
                 {
-                    ChangeAnimationState(PLAYER_IDLE);
+                    ChangeAnimation(PLAYER_IDLE);
                 }
             }
             else if (horizontal != 0)
             {
                 if (IsGrounded() || IsPlatform())
                 {
-                    ChangeAnimationState(PLAYER_WALK);
+                    ChangeAnimation(PLAYER_WALK);
                 }
             }
         }
     }
 
-    void Dashing()
+    public void Dashing()
     {
         if (isDashing)
         {
@@ -274,15 +279,16 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
         ghostController.enabled = true;
-        ChangeAnimationState(PLAYER_DASH);
+        ChangeAnimation(PLAYER_DASH);
         yield return new WaitForSeconds(dashingTime);
         ghostController.enabled = false;
-        ChangeAnimationState(PLAYER_IDLE);
+        ChangeAnimation(PLAYER_IDLE);
         rb.gravityScale = originalGravity;
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
     }
+
     void Flip()
     {
         if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
@@ -304,18 +310,6 @@ public class PlayerController : MonoBehaviour
         return Physics2D.OverlapCircle(groundCheck.position, 0.5f, platformLayer);
     }
 
-    void ChangeAnimationState(string newState)
-    {
-        //stop the same animation from interrupting itself 
-        if (currentState == newState) return;
-
-        //play the animation
-        animator.Play(newState);
-
-        //reassign the current state
-        currentState = newState;
-    }
-
     public void TakeDamage()
     {
 
@@ -325,4 +319,48 @@ public class PlayerController : MonoBehaviour
     {
 
     }
+
+    //=====================================//
+
+    public void ChangeAnimation(string newAnim)
+    {
+        //stop the same animation from interrupting itself 
+        if (curAnimState == newAnim) return;
+
+        //play the animation
+        animator.Play(newAnim);
+
+        //reassign the current state
+        curAnimState = newAnim;
+    }
+    public void ChangeState(IStatePlayer newState)
+    {
+        if (currentState != null)
+        {
+            currentState.OnExit(this);
+        }
+
+        currentState = newState;
+
+        if (currentState != null)
+        {
+            currentState.OnEnter(this);
+        }
+    }
+}
+
+public class PlayerAnim
+{
+    //Animation State
+    public const string IDLE = "PlayerIdle";
+    public const string WALK = "PlayerWalk";
+    public const string JUMP = "PlayerJump";
+    public const string FALL = "PlayerFalling";
+    public const string DASH = "PlayerDashing";
+    public const string JUMP_ATTACK = "PlayerJumpAttack";
+
+    //AttackCombo
+    public const string ATTACK_1 = "PlayerAttack_1";
+    public const string ATTACK_2 = "PlayerAttack_2";
+    public const string ATTACK_3 = "PlayerAttack_3";
 }
