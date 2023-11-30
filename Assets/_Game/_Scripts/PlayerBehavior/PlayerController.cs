@@ -181,54 +181,9 @@ public class PlayerController : MonoBehaviour
 
     void HandleAnimation()
     {
-        ////Fall Anim
-        //if (Mathf.Abs(rb.velocity.y) > 0.5f && rb.velocity.y < -1f /*&& !IsGrounded()*/)
-        //{
-        //    if (!IsGrounded() || !IsPlatform())
-        //    {
-        //        if (isFalling == false/* && isAttack == false*/)
-        //        {
-        //            ChangeAnimationState(PLAYER_FALL);
-        //            isJumping = false;
-        //            isFalling = true;
-        //        }
-        //    }
-        //}
-        //else
-        //{
-
-        //}
-
-        ////Jump Anim
-        //if (/*!IsGrounded() && */isJumping == true)
-        //{
-        //    if (!IsGrounded() || !IsPlatform())
-        //    {
-        //        ChangeAnimationState(PLAYER_JUMP);
-        //    }
-        //}
-
-        ////Move Anim
-        //if (horizontal == 0/* && IsGrounded()*/)
-        //{
-        //    if (IsGrounded() || IsPlatform())
-        //    {
-        //        isMoving = false;
-        //        ChangeAnimationState(PLAYER_IDLE);
-        //    }
-        //}
-        //else if (horizontal != 0/* && IsGrounded()*/)
-        //{
-        //    if (IsGrounded() || IsPlatform())
-        //    {
-        //        isMoving = true;
-        //        ChangeAnimationState(PLAYER_WALK);
-        //    }
-        //}
         if (Mathf.Abs(rb.velocity.y) > 0.05f && rb.velocity.y > 0)
         {
             ChangeAnimationState(PLAYER_JUMP);
-
         }
         else if (Mathf.Abs(rb.velocity.y) > 0.05f && rb.velocity.y < -2f)
         {
@@ -274,7 +229,7 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
         ghostController.enabled = true;
-        ChangeAnimationState(PLAYER_DASH);
+        //ChangeAnimationState(PLAYER_DASH);
         yield return new WaitForSeconds(dashingTime);
         ghostController.enabled = false;
         ChangeAnimationState(PLAYER_IDLE);
