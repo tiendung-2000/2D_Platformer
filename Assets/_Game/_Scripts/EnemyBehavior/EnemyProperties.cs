@@ -154,7 +154,12 @@ public class EnemyProperties : MonoBehaviour
 
     protected bool IsCatchPlayer()
     {
-        return Physics2D.Raycast(transform.position + distanceChase, direction, distanceToChase, playerLayer);
+        if (type != EnemyType.Flying)
+        {
+            return Physics2D.Raycast(transform.position + distanceChase, direction, distanceToChase, playerLayer);
+        }
+
+        return Physics2D.OverlapCircle(transform.position, distanceToChase, playerLayer);
     }
 
     protected bool IsCanAttack()
@@ -339,9 +344,19 @@ public class EnemyProperties : MonoBehaviour
             Gizmos.DrawWireSphere(groundDetection.position, radiusCheck);
             Gizmos.DrawWireSphere(connerDetection.position, radiusCheck);
         }
-        Gizmos.DrawRay(transform.position + distanceChase, direction * distanceToChase);
-        Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position, direction * distanceToAttack);
+
+        if (type != EnemyType.Flying)
+        {
+            Gizmos.DrawRay(transform.position + distanceChase, direction * distanceToChase);
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(transform.position, direction * distanceToAttack);
+        }
+        else
+        {
+            Gizmos.DrawWireSphere(transform.position, distanceToChase);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(transform.position, distanceToAttack);
+        }
     }
     #endregion
 }
