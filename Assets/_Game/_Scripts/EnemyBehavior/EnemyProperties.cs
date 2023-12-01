@@ -13,25 +13,21 @@ public class EnemyProperties : MonoBehaviour
     [SerializeField] protected float distanceToAttack;
 
     [Header("Bool")]
+    [SerializeField] protected bool isLive;
     [SerializeField] protected bool isFacingRight;
+    [SerializeField] protected bool isTouchConner;
     [SerializeField] protected bool isGrounded;
     [SerializeField] protected bool isMoving;
     [SerializeField] protected bool isAttack;
-    [SerializeField] protected bool isLive;
-
-    [SerializeField] protected bool isTouchConner;
 
     [Header("Animation State")]
     [SerializeField] protected Animator animator;
     [SerializeField] protected string currentState;
 
     #region AnimationName
-    //Waiting
-    protected const string FLY = "Fly";
     protected const string IDLE = "Idle";
-    //Moving
-    protected const string WALK = "Walk";
-    //End
+    protected const string MOVE = "Walk";
+    protected const string ATTACK = "Attack";
     protected const string DIE = "Die";
     #endregion
 
@@ -43,13 +39,27 @@ public class EnemyProperties : MonoBehaviour
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected EnemyType type;
 
+    protected enum EnemyType { Patrol, Flying, Guarding, }
+    protected enum State { Idle, Patrol, /*Chase,*/ Attack }
     Vector2 direction = Vector2.right;
+    protected float timer = 2f;
+    protected float duration = 2f;
+    protected State state;
+
+    public Vector3 distanceChase;
+    protected virtual void Update()
+    {
+        Movement();
+        CaculateBehavior();
+        Debug.Log("Hehehhe");
+    }
 
     private void OnEnable()
     {
         OnInit();
     }
-    public virtual void OnInit()
+
+    protected virtual void OnInit()
     {
         curHealth = maxHealth;
         isLive = true;
@@ -57,18 +67,20 @@ public class EnemyProperties : MonoBehaviour
         //player = LevelManager.Ins.player;
         rb = GetComponent<Rigidbody2D>();
         CheckEnemyType();
+        distanceChase = new Vector3(-(distanceToChase * 0.5f), 0f);
     }
-    void CheckEnemyType()
+
+    protected void CheckEnemyType()
     {
         switch (type)
         {
             case EnemyType.Patrol:
-                ChangeAnimationState(WALK);
+                ChangeAnimationState(MOVE);
                 isMoving = true;
                 break;
             case EnemyType.Flying:
-                ChangeAnimationState(FLY);
-                isMoving = true;
+                ChangeAnimationState(IDLE);
+                isMoving = false;
                 break;
             case EnemyType.Guarding:
                 ChangeAnimationState(IDLE);
@@ -76,15 +88,14 @@ public class EnemyProperties : MonoBehaviour
                 break;
         }
     }
-    #region Moving Behavior Enemy Type
-    #region Patrol Enemy
-    public virtual void PatrolMovement()
+
+    protected virtual void Movement()
     {
         CheckFlip();
 
         if (isMoving)
         {
-            ChangeAnimationState(WALK);
+            ChangeAnimationState(MOVE);
             rb.velocity = transform.right * speed;
         }
         else
@@ -92,74 +103,46 @@ public class EnemyProperties : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
     }
-    #endregion
-    #region Fly Enemy
-    public virtual void FlyMovement()
-    {
-        if (isMoving)
-        {
-            ChangeAnimationState(FLY);
-        }
-    }
-    #endregion
-    #region Guarding Enemy
-    public virtual void GuardingMovement()
-    {
-        CheckFlip();
 
-        if (isMoving)
-        {
-            Debug.Log("Moving");
+    protected void FlipTowardsPlayer()
+    {
+        Vector3 directionToPlayer = player.gameObject.transform.position - transform.position;
 
-            ChangeAnimationState(WALK);
-            rb.velocity = transform.right * speed;
+        if (directionToPlayer.x > 0)
+        {
+            direction = Vector2.right;
+            distanceChase = new Vector3(-(distanceToChase * 0.5f), 0f);
+            transform.eulerAngles = new Vector3(0, 0, 0);
+            isFacingRight = true;
         }
         else
         {
-            rb.velocity = Vector2.zero;
-        }
-    }
-    #endregion
-    #region Flip
-
-    public void FlipTowardsPlayer()
-    {
-        if (isAttack)
-        {
-            Vector3 directionToPlayer = player.gameObject.transform.position - transform.position;
-
-            if (directionToPlayer.x > 0)
-            {
-                direction = Vector2.right;
-                transform.eulerAngles = new Vector3(0, 0, 0);
-                isFacingRight = true;
-            }
-            else
-            {
-                direction = Vector2.left;
-                transform.eulerAngles = new Vector3(0, -180, 0);
-                isFacingRight = false;
-            }
+            direction = Vector2.left;
+            distanceChase = new Vector3((distanceToChase * 0.5f), 0f);
+            transform.eulerAngles = new Vector3(0, -180, 0);
+            isFacingRight = false;
         }
     }
 
-    public void Flip()
+    protected void Flip()
     {
         if (isFacingRight == true)
         {
             direction = Vector2.left;
+            distanceChase = new Vector3((distanceToChase * 0.5f), 0f);
             transform.eulerAngles = new Vector3(0, -180, 0);
             isFacingRight = false;
         }
         else
         {
             direction = Vector2.right;
+            distanceChase = new Vector3(-(distanceToChase * 0.5f), 0f);
             transform.eulerAngles = new Vector3(0, 0, 0);
             isFacingRight = true;
         }
     }
 
-    public void CheckFlip()
+    protected void CheckFlip()
     {
         isGrounded = Physics2D.OverlapCircle(groundDetection.position, radiusCheck, groundLayer);
         isTouchConner = Physics2D.OverlapCircle(connerDetection.position, radiusCheck, groundLayer);
@@ -168,26 +151,153 @@ public class EnemyProperties : MonoBehaviour
             Flip();
         }
     }
-    #endregion
-    #endregion
 
-    public bool IsCatchPlayer()
+    protected bool IsCatchPlayer()
     {
-        return Physics2D.Raycast(transform.position, direction, distanceToChase, playerLayer);
+        return Physics2D.Raycast(transform.position + distanceChase, direction, distanceToChase, playerLayer);
     }
 
-    public bool IsCanAttack()
+    protected bool IsCanAttack()
     {
         return Physics2D.Raycast(transform.position, direction, distanceToAttack, playerLayer);
     }
-    public virtual void GiveDamage(int damage)
+
+    protected virtual void CaculateBehavior()
+    {
+        timer -= Time.deltaTime;
+
+        switch (state)
+        {
+            case State.Idle:
+                if (timer <= 0f)
+                {
+                    isMoving = true;
+                    ChangeState(State.Patrol);
+                    Debug.Log("Patroling");
+                }
+                else if (IsCatchPlayer() && !IsCanAttack())
+                {
+                    isMoving = true;
+                    FlipTowardsPlayer();
+                    ChangeState(State.Patrol);
+                    Debug.Log("Chasing");
+                }
+                break;
+
+            case State.Patrol:
+                if (timer <= 0f)
+                {
+                    isMoving = false;
+                    ChangeState(State.Idle);
+                    Debug.Log("Idling");
+                }
+                else if (IsCatchPlayer() /*&& !IsCanAttack()*/)
+                {
+                    //isMoving = true;
+                    FlipTowardsPlayer();
+                    //ChangeState(State.Chase);
+                    if (IsCanAttack())
+                    {
+                        isMoving = false;
+                        Debug.Log("Can Attack");
+                        ChangeState(State.Attack);
+                    }
+                    Debug.Log("Chasing");
+                }
+                break;
+
+            //case State.Chase:
+            //    if (IsCanAttack())
+            //    {
+            //        isMoving = false;
+            //        Debug.Log("Can Attack");
+            //        ChangeState(State.Attack);
+            //    }
+            //    else if (!IsCanAttack())
+            //    {
+            //        if (IsCatchPlayer() && !IsCanAttack())
+            //        {
+            //            isMoving = true;
+            //            ChangeState(State.Chase);
+            //        }
+            //        else if (!IsCatchPlayer())
+            //        {
+            //            isMoving = false;
+            //            ChangeState(State.Idle);
+            //        }
+            //    }
+            //    break;
+
+            case State.Attack:
+                if (IsCanAttack())
+                {
+                    isMoving = false;
+                    isAttack = true;
+                    MeleeAttack();
+                }
+                else if (!IsCanAttack())
+                {
+                    isAttack = false;
+                    isMoving = false;
+                    ChangeState(State.Idle);
+                    Debug.Log("Idling");
+                }
+                break;
+        }
+    }
+
+    protected virtual void ChangeState(State nextState)
+    {
+        state = nextState;
+
+        switch (state)
+        {
+            case State.Idle:
+                timer = duration;
+                ChangeAnimationState(IDLE);
+                Debug.Log("IdleState");
+                break;
+
+            case State.Patrol:
+                timer = duration;
+                ChangeAnimationState(MOVE);
+                Debug.Log("PatrolState");
+                break;
+
+            //case State.Chase:
+            //    ChangeAnimationState(MOVE);
+            //    Debug.Log("ChaseState");
+            //    break;
+
+            case State.Attack:
+                ChangeAnimationState(ATTACK);
+                Debug.Log("AttackState");
+                break;
+        }
+    }
+
+    protected virtual void MeleeAttack()
+    {
+        if (isAttack == true)
+        {
+            Debug.Log("Attacking");
+        }
+    }
+
+    protected virtual void RangerAttack()
+    {
+
+    }
+
+    protected virtual void GiveDamage(int damage)
     {
         if (isLive && isAttack)
         {
             Debug.Log("Damage Player");
         }
     }
-    public virtual void TakeDamage(int damage)
+
+    protected virtual void TakeDamage(int damage)
     {
         if (isLive)
         {
@@ -199,14 +309,18 @@ public class EnemyProperties : MonoBehaviour
             }
         }
     }
-    public virtual void Die()
+
+    protected virtual void Die()
     {
+        ChangeAnimationState(DIE);
     }
-    public virtual void OnDespawn()
+
+    protected virtual void OnDespawn()
     {
         Destroy(gameObject);
     }
-    public void ChangeAnimationState(string newState)
+
+    protected void ChangeAnimationState(string newState)
     {
         //stop the same animation from interrupting itself 
         if (currentState == newState) return;
@@ -215,8 +329,9 @@ public class EnemyProperties : MonoBehaviour
         //reassign the current state
         currentState = newState;
     }
+
     #region DebugGizmos
-    public virtual void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         if (groundDetection != null)
         {
@@ -224,15 +339,9 @@ public class EnemyProperties : MonoBehaviour
             Gizmos.DrawWireSphere(groundDetection.position, radiusCheck);
             Gizmos.DrawWireSphere(connerDetection.position, radiusCheck);
         }
-        Gizmos.DrawRay(transform.position, direction * distanceToChase);
+        Gizmos.DrawRay(transform.position + distanceChase, direction * distanceToChase);
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, direction * distanceToAttack);
     }
     #endregion
-    public enum EnemyType
-    {
-        Patrol,
-        Flying,
-        Guarding,
-    }
 }

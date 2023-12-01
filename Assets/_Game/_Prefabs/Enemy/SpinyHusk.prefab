@@ -236,6 +236,8 @@ MonoBehaviour:
   maxHealth: 0
   speed: 0
   radiusCheck: 0.1
+  distanceToChase: 0
+  distanceToAttack: 0
   isFacingRight: 0
   isGrounded: 0
   isMoving: 0
@@ -251,4 +253,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
   type: 2

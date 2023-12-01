@@ -2,7 +2,7 @@ public class Aluba : EnemyProperties
 {
     private void Update()
     {
-        PatrolMovement();
+        Movement();
         //CheckFlip();
     }
 

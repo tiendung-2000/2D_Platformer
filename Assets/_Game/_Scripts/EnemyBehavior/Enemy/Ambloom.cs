@@ -6,7 +6,7 @@ public class Ambloom : EnemyProperties
 {
     private void Update()
     {
-        PatrolMovement();
+        Movement();
         //CheckFlip();
     }
 }
