@@ -138,8 +138,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 449822841
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2911e596eb7b2d8429c09d5fcc89fc9a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -204,7 +204,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.020857811, y: -0.18223144}
@@ -236,14 +236,14 @@ MonoBehaviour:
   maxHealth: 100
   speed: 3
   radiusCheck: 0.1
-  distanceToChase: 0
-  distanceToAttack: 0
+  distanceToChase: 3.5
+  distanceToAttack: 3
+  isLive: 0
   isFacingRight: 0
+  isTouchConner: 0
   isGrounded: 0
   isMoving: 0
   isAttack: 0
-  isLive: 0
-  isTouchConner: 0
   animator: {fileID: 5799868748338567530}
   currentState: 
   player: {fileID: 0}
@@ -257,3 +257,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   type: 1
+  distanceChase: {x: 0, y: 0, z: 0}

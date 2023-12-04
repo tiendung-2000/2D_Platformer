@@ -188,7 +188,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -236,14 +236,14 @@ MonoBehaviour:
   maxHealth: 100
   speed: 3
   radiusCheck: 0.1
-  distanceToChase: 0
-  distanceToAttack: 0
+  distanceToChase: 7
+  distanceToAttack: 1
+  isLive: 0
   isFacingRight: 1
+  isTouchConner: 0
   isGrounded: 0
   isMoving: 0
   isAttack: 0
-  isLive: 0
-  isTouchConner: 0
   animator: {fileID: 7332035136112985035}
   currentState: 
   player: {fileID: 0}
@@ -257,3 +257,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   type: 0
+  distanceChase: {x: 0, y: 0, z: 0}
